@@ -121,6 +121,136 @@ docker run --rm \
 - For each PDF (e.g., `report.pdf`), a JSON file (e.g., `report_headings_plus_text.json`) will be created in `output/intermediate/`.
 - The **final filtered, ranked output** is available as `semantic_filtered_output.json` in `/app/output/`.
 
+## Our Sample Output
+To decrease the perceived "font size" when displaying JSON in a Markdown README, you can't directly control the font size. However, you can use a smaller code block format (if available on the specific Markdown renderer, though not standard) or, more commonly, **shorten the lines of text to make it appear less dense**.
+
+Given that you want it to appear "as it is" in structure, the best approach is still a standard JSON code block. The primary way to make it *look* smaller without actually changing the font size in Markdown is to reduce the amount of content shown, or to format it more compactly.
+
+Since you've provided the full JSON and asked to display it "as is," here's how you'd put it in your README, keeping the standard Markdown code block format. This format is what GitHub and most Markdown renderers use for displaying code and it's the most appropriate. The font size is determined by the browser/viewer, not by Markdown itself.
+
+````markdown
+```json
+{
+  "metadata": {
+    "input_documents": [
+      "South of France - Cities.pdf",
+      "South of France - Things to Do.pdf"
+    ],
+    "persona": "Travel Agent",
+    "job_to_be_done": "Plan a trip to Franch",
+    "processing_timestamp": "2025-07-28T17:43:40.214667"
+  },
+  "extracted_sections": [
+    {
+      "document": "South of France - Cities.pdf",
+      "section_title": "Comprehensive Guide to Major Cities in the South of France",
+      "importance_rank": 1,
+      "page_number": 8
+    },
+    {
+      "document": "South of France - Cities.pdf",
+      "section_title": "Aix-en-Provence: A City of Art and Culture",
+      "importance_rank": 2,
+      "page_number": 1
+    },
+    {
+      "document": "South of France - Cities.pdf",
+      "section_title": "Marseille: The Oldest City in France",
+      "importance_rank": 3,
+      "page_number": 3
+    },
+    {
+      "document": "South of France - Cities.pdf",
+      "section_title": "Travel Tips",
+      "importance_rank": 4,
+      "page_number": 2
+    },
+    {
+      "document": "South of France - Things to Do.pdf",
+      "section_title": "Antibes: Visit Marineland for marine shows and an aquarium.",
+      "importance_rank": 1,
+      "page_number": 9
+    },
+    {
+      "document": "South of France - Things to Do.pdf",
+      "section_title": "Aix-en-Provence: Visit Thermes Sextius for thermal baths and massages.",
+      "importance_rank": 2,
+      "page_number": 7
+    },
+    {
+      "document": "South of France - Things to Do.pdf",
+      "section_title": "Beach Hopping",
+      "importance_rank": 3,
+      "page_number": 2
+    },
+    {
+      "document": "South of France - Things to Do.pdf",
+      "section_title": "Coastal Adventures",
+      "importance_rank": 4,
+      "page_number": 2
+    },
+    {
+      "document": "South of France - Things to Do.pdf",
+      "section_title": "Hiking and Biking",
+      "importance_rank": 5,
+      "page_number": 4
+    }
+  ],
+  "subsection_analysis": [
+    {
+      "document": "South of France - Cities.pdf",
+      "refined_text": "Aix-en-Provence: A City of Art and Culture Aix-en-Provence: A City of Art and Culture",
+      "page_number": 8
+    },
+    {
+      "document": "South of France - Cities.pdf",
+      "refined_text": "Comprehensive Guide to Major Cities in the South of France Comprehensive Guide to Major Cities in the South of France",
+      "page_number": 1
+    },
+    {
+      "document": "South of France - Cities.pdf",
+      "refined_text": "Marseille: The Oldest City in France Marseille: The Oldest City in France",
+      "page_number": 3
+    },
+    {
+      "document": "South of France - Cities.pdf",
+      "refined_text": "Travel Tips Travel Tips e Best Time to Visit: The best time to visit the South of France is during the spring (April to June) and fall (September to October) when the weather is pleasant, and the tourist crowds are smaller. e Transportation: The region is well-connected by an extensive network of trains, buses, and flights. Renting a car is also a great option for exploring the countryside and smaller towns. e Language: While French is the official language, English is widely spoken in tourist areas. Learning a few basic French phrases can enhance your travel experience.",
+      "page_number": 2
+    },
+    {
+      "document": "South of France - Cities.pdf",
+      "refined_text": "Nice: The Jewel of the French Riviera Nice: The Jewel of the French Riviera",
+      "page_number": 5
+    },
+    {
+      "document": "South of France - Things to Do.pdf",
+      "refined_text": "e Antibes: Visit Marineland for marine shows and an aquarium. e Antibes: Visit Marineland for marine shows and an aquarium. e Fréjus: Cool off at Aqualand water park. e Villeneuve-Loubet: Enjoy quirky attractions at Le Village des Fous. e Monteux: Spend a day at Parc Spirou, a theme park based on the famous comic book character. e La Palmyre: Explore the La Palmyre Zoo, home to a wide variety of animals. e Cap d'Agde: Have fun at Luna Park, an amusement park with rides and games. e Toulouse: Visit the Cité de l'Espace, a space-themed science museum with interactive exhibits.",
+      "page_number": 9
+    },
+    {
+      "document": "South of France - Things to Do.pdf",
+      "refined_text": "e Aix-en-Provence: Visit Thermes Sextius for thermal baths and massages. e Aix-en-Provence: Visit Thermes Sextius for thermal baths and massages. e Bordeaux: Enjoy vinotherapy treatments at Les Sources de Caudalie. e Vichy: Experience hydrotherapy and mud baths at Spa Vichy Célestins. e Evian-les-Bains: Relax at the Evian Resort, known for its mineral-rich waters. e Saint-Raphaël: Visit the Thalasso Spa for seawater treatments and relaxation. e Biarritz: Enjoy the luxurious spas and wellness centers in this coastal town. e Cannes: Indulge in a pampering session at one of the many high-end spas.",
+      "page_number": 7
+    },
+    {
+      "document": "South of France - Things to Do.pdf",
+      "refined_text": "Beach Hopping Beach Hopping e Nice: Visit the sandy shores and enjoy the vibrant Promenade des Anglais. e Antibes: Relax on the pebbled beaches and explore the charming old town. e Saint-Tropez: Experience the exclusive beach clubs and glamorous atmosphere. e Marseille to Cassis: Explore the stunning limestone cliffs and hidden coves of Calanques National Park. e les d'Hyéres: Discover pristine beaches and excellent snorkeling opportunities on islands like Porquerolles and Port-Cros. e Cannes: Enjoy the sandy beaches and luxury beach clubs along the Boulevard de la Croisette. e Menton: Visit the serene beaches and beautiful gardens in this charming town near the Italian border.",
+      "page_number": 2
+    },
+    {
+      "document": "South of France - Things to Do.pdf",
+      "refined_text": "Coastal Adventures Coastal Adventures The South of France is renowned for its beautiful coastline along the Mediterranean Sea. Here are some activities to enjoy by the sea:",
+      "page_number": 2
+    },
+    {
+      "document": "South of France - Things to Do.pdf",
+      "refined_text": "Hiking and Biking Hiking and Biking e Verdon Gorge: Known as the \"Grand Canyon of Europe,\" offering spectacular hiking trails. e Luberon Regional Park: Explore picturesque villages and rolling hills, famous for lavender fields and vineyards. e Pyrenees National Park: Enjoy challenging hikes and stunning mountain scenery. e Mercantour National Park: Discover diverse wildlife and beautiful alpine landscapes. e Camargue: Explore the unique wetlands on horseback or by bike. e Mont Ventoux: Challenge yourself with a hike or bike ride up this iconic mountain. e Gorges du Tarn: Hike through dramatic gorges and enjoy breathtaking views.",
+      "page_number": 4
+    }
+  ]
+}
+````
+
 
 ## Important Notes
 
