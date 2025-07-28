@@ -50,9 +50,9 @@ See `requirements.txt` for Python libraries.
 ## Sample input and output
 
 INPUT
-<img width="792" height="762" alt="image" src="https://github.com/user-attachments/assets/c6877f34-8412-445b-b66e-b297fe34bd48" />
-<img width="737" height="745" alt="image" src="https://github.com/user-attachments/assets/157a8000-c531-4214-8be2-f5dc9ac747d6" /> 
-<img width="766" height="818" alt="image" src="https://github.com/user-attachments/assets/d3936d92-f407-4cfb-a36c-824996ae8221" />
+<img width="50" height="50" alt="image" src="https://github.com/user-attachments/assets/c6877f34-8412-445b-b66e-b297fe34bd48" />
+<img width="50" height="50" alt="image" src="https://github.com/user-attachments/assets/157a8000-c531-4214-8be2-f5dc9ac747d6" /> 
+<img width="50" height="50" alt="image" src="https://github.com/user-attachments/assets/d3936d92-f407-4cfb-a36c-824996ae8221" />
 
 OUTPUT
 ## {
