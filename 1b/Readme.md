@@ -31,7 +31,7 @@ The system follows these main steps:
 7. **Structured Output Generation**  
    Produces a JSON file summarizing metadata, extracted sections, importance rankings, and refined text snippets matching the challenge output specification.
 
-## 🛠️ Technologies & Libraries Used
+##  Technologies & Libraries Used
 
 - **Python 3.10** — Base language for scripting
 - **Ultralytics YOLOv8** — State-of-the-art object detection model tailored for document layout analysis
