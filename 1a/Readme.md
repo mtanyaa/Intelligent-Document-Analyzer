@@ -30,7 +30,7 @@ Given a directory of PDF files, it processes each, detects the title and section
 
 See `requirements.txt` for Python libraries.
 
-## 🗃 Directory Structure
+## Directory Structure
 
 ```
 .
@@ -75,20 +75,7 @@ docker run --rm \
 - `--rm` — cleans up the container after finishing.
 - `-v` — mounts the `input` and `output` directories so data is exchanged with your host.
 
-### 5. **Review Output**
 
-For every `filename.pdf` in `input/`, you’ll get a corresponding `filename.json` in `output/` with this structure:
-
-```json
-{
-  "title": "Document Title",
-  "outline": [
-    {"page": 1, "text": "First Main Heading", "level": "H1"},
-    {"page": 1, "text": "Subsection", "level": "H2"},
-    ...
-  ]
-}
-```
 
 ## Troubleshooting
 
