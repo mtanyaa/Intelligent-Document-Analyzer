@@ -1,5 +1,9 @@
 # PDF Document Heading Extraction with YOLO, OCR, and Docker
 
+<img width="1117" height="422" alt="image" src="https://github.com/user-attachments/assets/d6b9deda-69f6-4a6a-a8c4-d433d07325ad" />
+
+
+
 ## Overview
 
 This project automates the extraction of section headings and titles from PDF documents using deep learning (YOLOv8), Optical Character Recognition (Tesseract OCR), and image processing—all efficiently containerized via Docker.
