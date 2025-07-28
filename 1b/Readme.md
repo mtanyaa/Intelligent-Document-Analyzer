@@ -1,4 +1,8 @@
 # Persona-Driven Document Intelligence with YOLO, OCR, and Semantic Filtering
+## Architecture
+
+![Screenshot 2025-07-28 214624](https://github.com/user-attachments/assets/3123eb2f-0549-4633-b689-60de832903b6)
+
 
 ## Overview
 
