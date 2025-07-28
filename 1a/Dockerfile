@@ -11,26 +11,23 @@ RUN apt-get update && \
     libsm6 \
     libxext6 \
     libxrender1 \
+    libgl1-mesa-glx \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Set workdir
+# Set working directory
 WORKDIR /app
 
-# Copy requirements first for layer caching
+# Copy dependency list and install Python packages
 COPY requirements.txt .
-
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application script into the image
+# Copy application script and YOLO model
 COPY app.py .
+RUN wget -q https://huggingface.co/hantian/yolo-doclaynet/resolve/main/yolov8n-doclaynet.pt -O yolov8n-doclaynet.pt
 
-# Download YOLO model at build time to avoid re-downloading at runtime (optional but optimal)
-RUN wget -q --show-progress https://huggingface.co/hantian/yolo-doclaynet/resolve/main/yolov8n-doclaynet.pt -O yolov8n-doclaynet.pt
-
-# Make sure /app/input and /app/output directories exist for Docker volume mount
+# Create folders for input/output (you can also mount volumes here)
 RUN mkdir -p /app/input /app/output
 
-# Set our entrypoint
-ENTRYPOINT ["python", "app.py"]
+# Run app.py when container starts
+CMD ["python", "app.py"]
