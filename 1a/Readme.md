@@ -47,6 +47,49 @@ See `requirements.txt` for Python libraries.
 - **/app/input/**: (Mounted) Input directory for PDF files.
 - **/app/output/**: (Mounted) Output directory for results.
 
+## Sample input and output
+
+##INPUT
+<img width="792" height="762" alt="image" src="https://github.com/user-attachments/assets/c6877f34-8412-445b-b66e-b297fe34bd48" /><img width="737" height="745" alt="image" src="https://github.com/user-attachments/assets/157a8000-c531-4214-8be2-f5dc9ac747d6" /> <img width="766" height="818" alt="image" src="https://github.com/user-attachments/assets/d3936d92-f407-4cfb-a36c-824996ae8221" />
+
+##OUTPUT
+{
+  "title": "Comprehensive Guide to Major Cities in the South of France",
+  "outline": [
+    {
+      "level": "H2",
+      "text": "Introduction",
+      "page": 1
+    },
+    {
+      "level": "H2",
+      "text": "Overview of the Region",
+      "page": 2
+    },
+    {
+      "level": "H2",
+      "text": "Travel Tips",
+      "page": 2
+    },
+    {
+      "level": "H2",
+      "text": "Marseille: The Oldest City in France",
+      "page": 3
+    },
+    {
+      "level": "H2",
+      "text": "History",
+      "page": 3
+    },
+    {
+      "level": "H2",
+      "text": "Local Experiences",
+      "page": 3
+    }, 
+    .....
+    }
+
+
 ##  Setup Instructions
 
 ### 1. **Prerequisites**
