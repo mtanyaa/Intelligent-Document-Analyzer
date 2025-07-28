@@ -1,6 +1,7 @@
 # PDF Document Heading Extraction with YOLO, OCR, and Docker
 
-<img width="1117" height="422" alt="image" src="https://github.com/user-attachments/assets/d6b9deda-69f6-4a6a-a8c4-d433d07325ad" />
+<img width="5344" height="1990" alt="diagram-export-7-28-2025-9_32_35-PM (2)" src="https://github.com/user-attachments/assets/f0bc5209-12f6-400f-95c5-d1f894ecadac" />
+
 
 
 
