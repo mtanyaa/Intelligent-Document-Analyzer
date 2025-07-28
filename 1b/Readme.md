@@ -130,7 +130,7 @@ docker run --rm \
       "South of France - Things to Do.pdf"
     ],
     "persona": "Travel Agent",
-    "job_to_be_done": "Plan a trip to Franch",
+    "job_to_be_done": "Plan a trip to France",
     "processing_timestamp": "2025-07-28T17:43:40.214667"
   },
   "extracted_sections": [
