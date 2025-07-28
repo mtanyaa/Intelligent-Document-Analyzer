@@ -88,7 +88,7 @@ See `requirements.txt` for Python libraries.
       "level": "H2",
       "text": "Local Experiences",
       "page": 3
-    }
+    },
     .....
   ]
 }
