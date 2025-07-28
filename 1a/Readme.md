@@ -84,7 +84,7 @@ docker run --rm \
 - Container logs will display any errors encountered during processing.
 - No model weights or output data should be placed in your repository; the model is downloaded at build/runtime.
 
-## ℹNotes
+## Notes
 
 - **No input/output or model files** are included in this repository.
 - All output is non-interactive. Once the container exits, check the `output/` directory for results.
