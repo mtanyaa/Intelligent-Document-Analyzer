@@ -122,13 +122,6 @@ docker run --rm \
 - The **final filtered, ranked output** is available as `semantic_filtered_output.json` in `/app/output/`.
 
 ## Our Sample Output
-To decrease the perceived "font size" when displaying JSON in a Markdown README, you can't directly control the font size. However, you can use a smaller code block format (if available on the specific Markdown renderer, though not standard) or, more commonly, **shorten the lines of text to make it appear less dense**.
-
-Given that you want it to appear "as it is" in structure, the best approach is still a standard JSON code block. The primary way to make it *look* smaller without actually changing the font size in Markdown is to reduce the amount of content shown, or to format it more compactly.
-
-Since you've provided the full JSON and asked to display it "as is," here's how you'd put it in your README, keeping the standard Markdown code block format. This format is what GitHub and most Markdown renderers use for displaying code and it's the most appropriate. The font size is determined by the browser/viewer, not by Markdown itself.
-
-````markdown
 ```json
 {
   "metadata": {
