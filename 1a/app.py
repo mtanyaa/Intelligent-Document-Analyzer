@@ -9,13 +9,12 @@ from pdf2image import convert_from_path
 from ultralytics import YOLO
 from glob import glob
 import torch
-from ultralytics.nn.tasks import DetectionModel
+import unicodedata
 
-torch.serialization.add_safe_globals([DetectionModel])
 
 INPUT_DIR = "/app/input"
 OUTPUT_DIR = "/app/output"
-MODEL_PATH = "/app/yolov8n-doclaynet.pt"  
+MODEL_PATH = "/app/yolov8n-doclaynet.pt"
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -31,7 +30,7 @@ model = YOLO(MODEL_PATH)
 
 selected_files = sorted(glob(os.path.join(INPUT_DIR, "*.pdf")))
 if not selected_files:
-    print(f"\u274c No PDF files found in {INPUT_DIR}. Exiting.")
+    print(f" No PDF files found in {INPUT_DIR}. Exiting.")
     exit()
 
 def is_valid_heading(text, is_title=False):
@@ -58,9 +57,14 @@ def is_valid_heading(text, is_title=False):
 
     return True
 
+def clean_text(text):
+    if not isinstance(text, str):
+        return ""
+    return unicodedata.normalize("NFKD", text).encode("utf-8", "ignore").decode("utf-8")
+
 for PDF_PATH in selected_files:
     try:
-        print(f"\n\ud83d\udcc4 Processing: {PDF_PATH}")
+        print(f"\n Processing: {PDF_PATH}")
         pages = convert_from_path(PDF_PATH, dpi=300)
 
         results = []
@@ -82,6 +86,7 @@ for PDF_PATH in selected_files:
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
                 crop = img[y1:y2, x1:x2]
                 text = pytesseract.image_to_string(crop, config="--psm 6").strip()
+                text = clean_text(text)
 
                 is_current_box_potential_title = False
                 if page_idx == 1 and document_title is None:
@@ -127,8 +132,14 @@ for PDF_PATH in selected_files:
                 del result["y_pos"]
 
         output = {
-            "title": document_title,
-            "outline": results
+            "title": clean_text(document_title),
+            "outline": [
+                {
+                    "page": r["page"],
+                    "text": clean_text(r["text"]),
+                    "level": r["level"]
+                } for r in results
+            ]
         }
 
         pdf_filename = os.path.basename(PDF_PATH)
@@ -138,7 +149,7 @@ for PDF_PATH in selected_files:
         with open(out_json_path, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)
 
-        print(f"\u2705 Saved: {out_json_path}")
+        print(f" Saved: {out_json_path}")
 
     except Exception as e:
-        print(f"\u274c Failed to process {PDF_PATH}: {e}")
+        print(f" Failed to process {PDF_PATH}: {e}")
