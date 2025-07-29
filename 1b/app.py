@@ -10,40 +10,41 @@ from ultralytics import YOLO
 from sentence_transformers import SentenceTransformer, util
 from datetime import datetime
 from pathlib import Path
-
+import unicodedata
 
 INPUT_PDF_DIR = "/app/input"
 INTERMEDIATE_DIR = "/app/output/intermediate"
 FINAL_OUTPUT_PATH = "/app/output/semantic_filtered_output.json"
 os.makedirs(INTERMEDIATE_DIR, exist_ok=True)
 
-
-with open(os.path.join(INPUT_PDF_DIR, "input_config.json"), "r") as f:
+with open(os.path.join(INPUT_PDF_DIR, "input_config.json"), "r", encoding="utf-8") as f:
     config = json.load(f)
 persona = config["persona"]
 job_to_be_done = config["job_to_be_done"]
-
 
 YOLO_MODEL_PATH = "/app/yolov8n-doclaynet.pt"
 SENTENCE_MODEL_PATH = "/app/all-MiniLM-L12-v2"
 yolo_model = YOLO(YOLO_MODEL_PATH)
 sem_model = SentenceTransformer(SENTENCE_MODEL_PATH)
 
-
 def is_valid_heading(text, is_title=False):
     if not text: return False
     text = text.strip()
     if not is_title and len(text.split()) > 15: return False
     footer_patterns = [
-        r"^page\s+\d+", r"^\d+\s+of\s+\d+", r"^(version|copyright)\s+",
-        r"^\d{1,2}/\d{1,2}/\d{2,4}$",  # date
-        r"^(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}(st|nd|rd|th)?,\s+\d{4}$",
-        r"^\d{1,2}\s+(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}$",
+        r"^page\\s+\\d+", r"^\\d+\\s+of\\s+\\d+", r"^(version|copyright)\\s+",
+        r"^\\d{1,2}/\\d{1,2}/\\d{2,4}$",
+        r"^(january|february|march|april|may|june|july|august|september|october|november|december)\\s+\\d{1,2}(st|nd|rd|th)?,\\s+\\d{4}$",
+        r"^\\d{1,2}\\s+(january|february|march|april|may|june|july|august|september|october|november|december)\\s+\\d{4}$",
     ]
     if any(re.match(pattern, text.lower()) for pattern in footer_patterns): return False
-    if not re.search(r"[a-zA-Z]", text) and not re.match(r"^[IVXLCDMivxlcdm]+\.?\s*|\d+\.?\s*|[A-Za-z]\.?\s*", text): return False
+    if not re.search(r"[a-zA-Z]", text) and not re.match(r"^[IVXLCDMivxlcdm]+\\.?\\s*|\\d+\\.?\\s*|[A-Za-z]\\.?\\s*", text): return False
     return True
 
+def clean_text(text):
+    if not isinstance(text, str):
+        return ""
+    return unicodedata.normalize("NFKD", text).encode("utf-8", "ignore").decode("utf-8")
 
 for pdf_path in sorted(Path(INPUT_PDF_DIR).glob("*.pdf")):
     try:
@@ -68,7 +69,6 @@ for pdf_path in sorted(Path(INPUT_PDF_DIR).glob("*.pdf")):
                 for i in range(len(ocr_data["text"])) if ocr_data["text"][i].strip()
             ]
 
-           
             heading_boxes = []
             for box in det.boxes:
                 cls = int(box.cls[0])
@@ -77,6 +77,7 @@ for pdf_path in sorted(Path(INPUT_PDF_DIR).glob("*.pdf")):
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
                 crop = img[y1:y2, x1:x2]
                 crop_text = pytesseract.image_to_string(crop, config="--psm 6").strip()
+                crop_text = clean_text(crop_text)
                 is_title = page_idx == 1 and title is None and label == "title"
                 if is_valid_heading(crop_text, is_title=is_title):
                     if is_title:
@@ -87,15 +88,15 @@ for pdf_path in sorted(Path(INPUT_PDF_DIR).glob("*.pdf")):
                             "bbox": [int(x1), int(y1), int(x2), int(y2)],
                             "y": y1
                         })
-         
+
             heading_boxes.sort(key=lambda b: b["y"])
-           
+
             for idx, heading in enumerate(heading_boxes):
                 y_start = heading["y"]
                 y_end = heading_boxes[idx + 1]["y"] if idx + 1 < len(heading_boxes) else img.shape[0]
                 span_text = " ".join(w["text"] for w in words_with_pos if y_start <= w["y"] < y_end)
                 heading["page"] = page_idx
-                heading["raw_page_text"] = f"{heading['text']}\n{span_text}"
+                heading["raw_page_text"] = clean_text(f"{heading['text']}\n{span_text}")
                 del heading["y"]
                 results.append(heading)
 
@@ -103,7 +104,7 @@ for pdf_path in sorted(Path(INPUT_PDF_DIR).glob("*.pdf")):
             title = results[0]["text"] if results else "Untitled Document"
 
         output = {
-            "title": title,
+            "title": clean_text(title),
             "outline": results
         }
         out_path = os.path.join(INTERMEDIATE_DIR, f"{pdf_path.stem}_headings_plus_text.json")
@@ -111,8 +112,6 @@ for pdf_path in sorted(Path(INPUT_PDF_DIR).glob("*.pdf")):
             json.dump(output, f, indent=2, ensure_ascii=False)
     except Exception as e:
         print(f"Failed to process {pdf_path}: {e}")
-
-
 
 metadata = {
     "input_documents": [],
@@ -164,13 +163,13 @@ for file_path in Path(INTERMEDIATE_DIR).glob("*_headings_plus_text.json"):
     for rank, (score, section, refined_text) in enumerate(candidate_sections[:5], start=1):
         extracted_sections.append({
             "document": input_filename,
-            "section_title": section["text"],
+            "section_title": clean_text(section["text"]),
             "importance_rank": rank,
             "page_number": section["page"]
         })
         subsection_analysis.append({
             "document": input_filename,
-            "refined_text": refined_text.replace("\n", " ").strip(),
+            "refined_text": clean_text(refined_text.replace("\n", " ").strip()),
             "page_number": section["page"]
         })
 
