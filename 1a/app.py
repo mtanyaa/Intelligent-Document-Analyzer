@@ -8,6 +8,10 @@ from PIL import Image
 from pdf2image import convert_from_path
 from ultralytics import YOLO
 from glob import glob
+import torch
+from ultralytics.nn.tasks import DetectionModel
+
+torch.serialization.add_safe_globals([DetectionModel])
 
 INPUT_DIR = "/app/input"
 OUTPUT_DIR = "/app/output"
@@ -27,18 +31,15 @@ model = YOLO(MODEL_PATH)
 
 selected_files = sorted(glob(os.path.join(INPUT_DIR, "*.pdf")))
 if not selected_files:
-    print(f"No PDF files found in {INPUT_DIR}. Exiting.")
+    print(f"\u274c No PDF files found in {INPUT_DIR}. Exiting.")
     exit()
 
 def is_valid_heading(text, is_title=False):
-    """
-    Validates if the extracted text is likely a document heading.
-    """
     if not text:
         return False
     text = text.strip()
 
-    if not is_title and len(text.split()) > 15: 
+    if not is_title and len(text.split()) > 15:
         return False
 
     footer_patterns = [
@@ -52,14 +53,14 @@ def is_valid_heading(text, is_title=False):
     if any(re.match(pattern, text.lower()) for pattern in footer_patterns):
         return False
 
-    if not re.search(r"[a-zA-Z]", text) and not re.match(r"^[IVXLCDMivxlcdm]+\.?\s*|\d+\.?\s*|[A-Za-z]\.?\s*", text):
+    if not re.search(r"[a-zA-Z]", text) and not re.match(r"^[IVXLCDMivxlcdm]+\.?\s*|\d+\.?\s*|[A-Za-z]\.?", text):
         return False
 
     return True
 
 for PDF_PATH in selected_files:
     try:
-        print(f"\n📄 Processing: {PDF_PATH}")
+        print(f"\n\ud83d\udcc4 Processing: {PDF_PATH}")
         pages = convert_from_path(PDF_PATH, dpi=300)
 
         results = []
@@ -69,7 +70,6 @@ for PDF_PATH in selected_files:
         for page_idx, pil_img in enumerate(pages, start=1):
             img = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
             det = model(img)[0]
-
             sorted_boxes = sorted(det.boxes, key=lambda b: b.xyxy[0][1])
 
             for box in sorted_boxes:
@@ -138,7 +138,7 @@ for PDF_PATH in selected_files:
         with open(out_json_path, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)
 
-        print(f"Saved: {out_json_path}")
+        print(f"\u2705 Saved: {out_json_path}")
 
     except Exception as e:
-        print(f"Failed to process {PDF_PATH}: {e}")
+        print(f"\u274c Failed to process {PDF_PATH}: {e}")
