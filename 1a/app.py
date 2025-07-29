@@ -41,14 +41,20 @@ def is_valid_heading(text, is_title=False):
     if not is_title and len(text.split()) > 15:
         return False
 
-    footer_patterns = [
-        r"^page\s+\d+",
-        r"^\d+\s+of\s+\d+",
-        r"^(version|copyright)\s+",
-        r"^\d{1,2}/\d{1,2}/\d{2,4}$",
-        r"^(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}(st|nd|rd|th)?,\s+\d{4}$",
-        r"^\d{1,2}\s+(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}$",
-    ]
+   footer_patterns = [
+    r"^page\s+\d+.*",                          # e.g., "Page 1"
+    r"^\d+\s+of\s+\d+.*",                      # e.g., "1 of 3"
+    r"^(version|copyright)\s+.*",              # e.g., "Version 2.0"
+    r"^\d{1,2}/\d{1,2}/\d{2,4}$",              # e.g., "12/04/2023"
+    r"^(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}(st|nd|rd|th)?,\s+\d{4}$",  # e.g., "March 2nd, 2022"
+    r"^\d{1,2}\s+(january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{4}$",  # e.g., "2 March 2022"
+    r"^signature.*",                           # e.g., "Signature of Officer"
+    r".*signature.*",                          # matches if "signature" appears anywhere
+    r"^signed.*",                              # e.g., "Signed on"
+    r"^date$",                                 # common in form footers
+    r"^confidential.*",                        # e.g., "Confidential Document"
+    r".*government servant.*",                 # matches lines like "Signature of Government Servant."
+]
     if any(re.match(pattern, text.lower()) for pattern in footer_patterns):
         return False
 
