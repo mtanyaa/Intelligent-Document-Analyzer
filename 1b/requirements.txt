@@ -1,7 +1,7 @@
 # Core Python libraries
 opencv-python-headless
 Pillow
-numpy
+numpy==1.26.4
 pdf2image
 pytesseract
 ultralytics==8.0.192  # lock to a reproducible YOLO version
