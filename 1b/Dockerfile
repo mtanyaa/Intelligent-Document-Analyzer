@@ -38,6 +38,8 @@ RUN wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resol
     wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/pytorch_model.bin -O all-MiniLM-L12-v2/pytorch_model.bin && \
     wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/tokenizer.json -O all-MiniLM-L12-v2/tokenizer.json && \
     wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/tokenizer_config.json -O all-MiniLM-L12-v2/tokenizer_config.json && \
+    wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/special_tokens_map.json -O all-MiniLM-L12-v2/special_tokens_map.json && \
+    wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/vocab.txt -O all-MiniLM-L12-v2/vocab.txt && \
     wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/sentence_bert_config.json -O all-MiniLM-L12-v2/sentence_bert_config.json && \
     mv all-MiniLM-L12-v2 /app/all-MiniLM-L12-v2
 
