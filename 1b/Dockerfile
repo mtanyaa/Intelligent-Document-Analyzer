@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
-FROM python:3.10-slim
+FROM python:3.10-slim AS base
 
-# -- 1. Install system dependencies for OCR and PDF conversion --
+# Install system dependencies for OCR and image processing
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y --no-install-recommends \
@@ -15,27 +15,39 @@ RUN apt-get update && \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-# -- 2. Set work directory --
+# Set working directory
 WORKDIR /app
 
-# -- 3. Copy requirements and install python dependencies --
-COPY requirements.txt ./
-RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+# Upgrade pip and setuptools
+RUN pip install --upgrade pip setuptools
 
-# -- 4. Download and unpack models at build time (NO downloads at runtime) --
+# Pre-install typing-extensions to satisfy torch dependency
+RUN pip install typing-extensions==4.12.2
 
-# YOLO model (DocLayNet)
-RUN wget -q --show-progress https://huggingface.co/hantian/yolo-doclaynet/resolve/main/yolov8n-doclaynet.pt -O /app/yolov8n-doclaynet.pt
+# Install PyTorch CPU versions with fallback to PyPI for missing dependencies
+RUN pip install --no-cache-dir torch==2.2.0 torchvision==0.17.0 torchaudio==2.2.0 \
+    --index-url https://download.pytorch.org/whl/cpu \
+    --extra-index-url https://pypi.org/simple
 
-# SentenceTransformer model - use the sentence-transformers library's CLI to download
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L12-v2').save('/app/all-MiniLM-L12-v2')"
+# Copy and install remaining Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# -- 5. Copy application code --
+# Download and cache the SentenceTransformer model
+RUN wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/config.json -O all-MiniLM-L12-v2/config.json && \
+    wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/pytorch_model.bin -O all-MiniLM-L12-v2/pytorch_model.bin && \
+    wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/tokenizer.json -O all-MiniLM-L12-v2/tokenizer.json && \
+    wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/tokenizer_config.json -O all-MiniLM-L12-v2/tokenizer_config.json && \
+    wget -q https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2/resolve/main/sentence_bert_config.json -O all-MiniLM-L12-v2/sentence_bert_config.json && \
+    mv all-MiniLM-L12-v2 /app/all-MiniLM-L12-v2
+
+
+# Copy application script and download YOLO model
 COPY app.py .
+RUN wget -q https://huggingface.co/hantian/yolo-doclaynet/resolve/main/yolov8n-doclaynet.pt -O yolov8n-doclaynet.pt
 
-# -- 6. Ensure input/output directories are present (they'll be mounted at runtime anyway) --
-RUN mkdir -p /app/input /app/output /app/output/intermediate
+# Create folders for input/output
+RUN mkdir -p /app/input /app/output
 
-# -- 7. Entrypoint --
-ENTRYPOINT ["python", "app.py"]
-
+# Run the app
+CMD ["python", "app.py"]
