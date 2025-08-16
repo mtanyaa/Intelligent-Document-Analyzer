@@ -1,0 +1,19 @@
+# API framework
+fastapi
+uvicorn[standard]
+
+# Core Python libraries
+opencv-python-headless
+Pillow
+numpy==1.26.4
+pdf2image
+pytesseract
+ultralytics==8.0.192  # reproducible YOLO version
+
+# Sentence Embeddings
+sentence-transformers==2.6.1
+torch>=1.12.0,<2.2  # Ensure torch for transformers
+
+
+#Required for handling form data
+python-multipart
